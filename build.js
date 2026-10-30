@@ -877,7 +877,7 @@ function main() {
   fs.writeFileSync(path.resolve(ROOT, output), html, 'utf8');
 
   const sections = doc.parts.reduce((n, p) => n + p.sections.length, 0);
-  const images = (html.match(/<img /g) || []).length;
+  const images = (html.match(/<img src=/g) || []).length;
   console.log(`Built ${output}: ${doc.parts.length} parts, ${sections} sections, ${images} photos.`);
   for (const w of warnings) console.warn(`Warning: ${w}`);
 }
