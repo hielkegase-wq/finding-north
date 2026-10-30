@@ -32,7 +32,7 @@ Alle `.html`-bestanden worden gemaakt door `build.js`. Pas ze dus niet met de ha
 
 ## Veelvoorkomende aanpassingen
 
-- **De twee regels van Erin Hanson.** Vervang in `tekst.md` de tekst tussen haken `\[Paste the two lines ... (Hanson, n.d.).\]` door de twee regels tussen aanhalingstekens, gevolgd door `(Hanson, n.d.)`. Bouw opnieuw: het oranje vak verdwijnt en de regels staan als citaat op de site.
+- **Een citaat met regels, zoals het gedicht van Erin Hanson.** Zet het citaat tussen aanhalingstekens aan het eind van de alinea, gevolgd door de bron, bijvoorbeeld `(Hanson, n.d.).` Een ` / ` tussen twee regels wordt op de site een nieuwe regel.
 - **Een foto vervangen.** Zet de nieuwe foto in `fotos/` met precies dezelfde bestandsnaam en bouw opnieuw.
 - **Een nieuwe foto.** Zet hem in `fotos/` en voeg in `build.js` bij `photos` een regel toe met de tekst na `image:` uit `tekst.md`, de bestandsnaam en een korte Engelse alt-tekst.
 - **2.1 en 2.3.** Zodra `tekst.md` een kop `### 2.1 ...` of `### 2.3 ...` heeft, komt die tekst op de plek van het vak "To come".

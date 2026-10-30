@@ -484,8 +484,9 @@ function para(t, ctx, c) {
   return `<p${c ? ` class="${c}"` : ''}>${inline(t, ctx)}</p>`;
 }
 
+// In a quote, " / " marks the end of a line, as when quoting a poem.
 function quote(q, ctx, c) {
-  return `<blockquote class="${cls('quote', c)}">${TRIANGLES}<p>${inline(q, ctx)}</p></blockquote>`;
+  return `<blockquote class="${cls('quote', c)}">${TRIANGLES}<p>${inline(q, ctx).replace(/ \/ /g, '<br>')}</p></blockquote>`;
 }
 
 function todoBox(text, ctx, c) {
