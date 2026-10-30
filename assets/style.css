@@ -311,6 +311,9 @@ strong { font-weight: 600; color: var(--heading); }
   object-fit: cover; object-position: 50% 52%;
   filter: var(--img-filter);
 }
+/* Whole photo on a band in its own background colour; the filter sits on the band so photo and band stay the same colour. */
+.cover-photo--contain { background: var(--cover-bg, transparent); filter: var(--img-filter); }
+.cover-photo--contain img { height: clamp(16rem, 38vh, 28rem); object-fit: contain; filter: none; }
 .cover-quote { margin-top: 2.3rem; max-width: 54rem; }
 .cover-quote p { font-size: 1.85rem; }
 .cover-meta {

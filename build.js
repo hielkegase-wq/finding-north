@@ -26,8 +26,11 @@ const SETTINGS = {
 
   cover: {
     title: 'Finding North.',
-    photo: 'fotos/kaleidoscope-cover.jpg',
-    photoAlt: 'The kaleidoscope, a paper tube with drawings of animals, on a wooden table',
+    photo: 'fotos/kaleidoscope-cover.png',
+    photoAlt: 'The kaleidoscope on a dark grey background, next to the handwritten words: Look through it. What do you see? Now ask the person next to you.',
+    // The whole photo is shown (not cut to a strip) on a band in the photo's own background colour.
+    photoFit: 'contain',
+    photoBackground: '#424242',
     quote: "I decide to look through someone else's kaleidoscope before I lead them.",
     institution: 'NHL Stenden',
   },
@@ -792,7 +795,7 @@ function renderCover(doc, ctx) {
     + `<h1 class="cover-title">${titleHTML(c.title)}</h1>`
     + (name ? `<p class="cover-name">${escapeHTML(name)}</p>` : '')
     + `</div><div class="cover-compass">${compassSVG('N', 'lg', 'Compass with North in orange')}</div></div>`
-    + `<figure class="cover-photo">${img}</figure>`
+    + `<figure class="${cls('cover-photo', c.photoFit === 'contain' && 'cover-photo--contain')}"${c.photoBackground ? ` style="--cover-bg:${escapeAttr(c.photoBackground)}"` : ''}>${img}</figure>`
     + quote(prep(c.quote), { ...ctx, noXref: true }, 'cover-quote')
     + `<dl class="cover-meta">${details.map(([k, v]) => `<div><dt>${escapeHTML(k)}</dt><dd>${escapeHTML(v)}</dd></div>`).join('')}</dl>`
     + '</div></section>';
