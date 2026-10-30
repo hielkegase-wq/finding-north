@@ -37,4 +37,6 @@ Alle `.html`-bestanden worden gemaakt door `build.js`. Pas ze dus niet met de ha
 - **Een nieuwe foto.** Zet hem in `fotos/` en voeg in `build.js` bij `photos` een regel toe met de tekst na `image:` uit `tekst.md`, de bestandsnaam en een korte Engelse alt-tekst.
 - **2.1 en 2.3.** Zodra `tekst.md` een kop `### 2.1 ...` of `### 2.3 ...` heeft, komt die tekst op de plek van het vak "To come".
 - **Grote koppen en kompasrichtingen** staan in `build.js` bij `headings` en `chapterCompass`.
+- **Het kompas met de verhalen** bij 1.1.1 leest de richting van elk verhaal uit de regel "Compass position" in de tabel van dat verhaal. De betekenis per richting komt uit de tabel in "How to read". De plek staat in `build.js` bij `storyCompass`.
+- **Een losse quote**, zoals "Laugh first, then be serious.", is een alinea met alleen een citaat tussen aanhalingstekens.
 - **Tekst weglaten** zonder hem uit `tekst.md` te halen: in `build.js` bij `omit`. Zo zijn 1.2.5 en alles behalve de eerste alinea van Appendix B weggelaten.

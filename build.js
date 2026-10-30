@@ -50,6 +50,10 @@ const SETTINGS = {
   // Orange point of the compass at each chapter heading: 'N', 'E', 'S', 'W', or null for none.
   chapterCompass: { 1: 'N', 2: null, 3: 'N', 4: 'N' },
 
+  // A big compass with every story at its point (from the story's "Compass position" table),
+  // placed in this section after the paragraph that starts with this text.
+  storyCompass: { section: '1.1', after: '**1.1.1 ' },
+
   // Sections that are not in tekst.md yet. As soon as tekst.md has a heading
   // with this number (for example "### 2.1 ..."), that text is used instead.
   toCome: [
@@ -643,6 +647,25 @@ function compassKey(tb, ctx, c) {
     + `<div class="ck ck--c">${compassSVG(null, 'lg', 'Compass with the four points')}</div></div></div>`;
 }
 
+// The stories of a section on one compass, each at the point from its "Compass position" table.
+function storyCompass(s, ctx) {
+  const nox = { ...ctx, noXref: true };
+  const at = { N: [], E: [], S: [], W: [] };
+  for (const sub of s.subs) {
+    const tb = sub.blocks.find((b) => b.type === 'table' && plain(prep(b.header[0])).toLowerCase() === 'compass position');
+    const d = tb && dirOf(plain(prep(tb.header[1])));
+    if (d) at[d].push(sub);
+  }
+  const cells = ['E', 'W', 'S', 'N'].map((d) => {
+    const stories = at[d].map((sub) => `<li><a href="${hrefTo(sub.id, ctx)}"><span class="sc-label">${inline(prep(sub.label || ''), nox)}</span> `
+      + `<span class="sc-name">${inline(prep(sub.title.split(',')[0]), nox)}</span></a></li>`).join('');
+    return `<div class="ck ck--${d.toLowerCase()}"><p class="kicker">${DIR_NAMES[d]}</p>`
+      + `<p class="ck-meaning">${inline(prep(ctx.meanings[d] || ''), nox)}</p>${stories ? `<ul class="sc-list">${stories}</ul>` : ''}</div>`;
+  }).join('');
+  return `<div class="compass-key story-compass wide" role="group" aria-label="My stories on the compass"><div class="ck-grid">${cells}`
+    + `<div class="ck ck--c">${compassSVG(null, 'lg')}</div></div></div>`;
+}
+
 function renderList(b, ctx, c) {
   const items = b.items.map((it) => `<li>${inline(prep(it), ctx)}</li>`).join('');
   const start = b.type === 'ol' && b.start !== 1 ? ` start="${b.start}"` : '';
@@ -660,6 +683,18 @@ function sectionKicker(s, part) {
   return null;
 }
 
+// The blocks of a section, with the story compass after its paragraph (see SETTINGS.storyCompass).
+function sectionBlocks(s, ctx) {
+  const sc = SETTINGS.storyCompass;
+  if (!sc || s.num !== sc.section) return renderBlocks(s.blocks, ctx);
+  const k = s.blocks.findIndex((b) => b.type === 'p' && b.text.startsWith(sc.after));
+  if (k < 0) {
+    warn(`Story compass: no paragraph in ${sc.section} starts with "${sc.after}".`);
+    return renderBlocks(s.blocks, ctx);
+  }
+  return renderBlocks(s.blocks.slice(0, k + 1), ctx) + storyCompass(s, ctx) + renderBlocks(s.blocks.slice(k + 1), ctx);
+}
+
 function renderSection(s, part, ctx, level) {
   const head = { ...ctx, noXref: true };
   const kicker = sectionKicker(s, part);
@@ -668,7 +703,7 @@ function renderSection(s, part, ctx, level) {
   if (s.toCome !== undefined) {
     content = `<div class="todo todo--big wide"><p class="todo-title">To come</p>${s.toCome ? `<p class="todo-note">${inline(prep(s.toCome), ctx)}</p>` : ''}</div>`;
   } else {
-    content = renderBlocks(s.blocks, ctx);
+    content = sectionBlocks(s, ctx);
   }
   const subs = s.subs.map((sub) => {
     const subKicker = sub.label ? `<p class="kicker">${inline(prep(sub.label), head)}</p>` : '';
@@ -866,7 +901,16 @@ function siteContext(doc) {
   // "Choice" in the overview table points to the choice assignments
   const choice = doc.parts.flatMap((p) => p.sections).find((s) => /^choice assignments/i.test(s.title));
   if (choice) titleIds.set('choice', choice.id);
-  return { pageOf, titleIds };
+  // What each point of the compass means, from the table in "How to read" (East: The situation, ...)
+  const meanings = {};
+  for (const b of doc.parts.flatMap((p) => p.blocks)) {
+    if (b.type !== 'table' || plain(prep(b.header[0])).toLowerCase() !== 'point') continue;
+    for (const r of b.rows) {
+      const d = dirOf(plain(prep(r[0])));
+      if (d) meanings[d] = r[1] || '';
+    }
+  }
+  return { pageOf, titleIds, meanings };
 }
 
 function pagerHTML(pages, i, ctx) {
