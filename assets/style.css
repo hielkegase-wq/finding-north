@@ -479,7 +479,6 @@ tbody th { font-weight: 600; color: var(--heading); }
 .t-overview tbody th { width: 9%; font: 500 0.88rem/1.6 "IBM Plex Mono", monospace; }
 .t-overview tbody th a { text-decoration: none; }
 .t-overview tbody th a:hover { text-decoration: underline; }
-.t-overview td:last-child { color: var(--muted); }
 
 /* ---------- Compass key (how to read) ---------- */
 

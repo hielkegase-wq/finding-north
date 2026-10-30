@@ -17,19 +17,21 @@ This portfolio follows the order of the minor: chapter 1, 2, 3 and 4. Inside eac
 | South | Self-knowledge | Who am I when I act, and what do I tend to avoid? |
 | North | What now? | What have I decided, and what will I do about it? |
 
-| No. | Piece | Read by | Status |
-| --- | --- | --- | --- |
-| 1.1 | The Moral Compass portfolio | Christine Fenech | Draft |
-| 1.2 | Your personal pitch | Michiel Galama & Harmannus Huizenga | Draft |
-| 1.3 | Your learning question | Michiel Galama & Harmannus Huizenga | Draft |
-| 1.4 | Reflection on the serious games | Michiel Galama & Harmannus Huizenga | Draft |
-| 1.5 | Your 80,000 hours | Michiel Galama & Harmannus Huizenga | Draft, sources to check |
-| 2.1 to 2.3 | Research project, reflection and poster | Jacqueline Rietveld & Folkert de Jong | 2.2 draft; 2.1 and 2.3 group work, added separately |
-| 3.1 | Film night | Michiel Galama & Harmannus Huizenga | Draft |
-| 3.2 | The crossing, or Alternative organisation | Michiel Galama & Harmannus Huizenga | Draft |
-| 3.3 | The exhibition in the church | Christine Fenech | Not in the portfolio |
-| 4 | Reflections on the learning outcomes | Michiel Galama & Harmannus Huizenga | To do |
-| Choice | Four choice assignments | \[to check\] | To do |
+| No. | Piece | Read by |
+| --- | --- | --- |
+| 1.1 | The Moral Compass portfolio | Christine Fenech |
+| 1.2 | Your personal pitch | Michiel Galama & Harmannus Huizenga |
+| 1.3 | Your learning question | Michiel Galama & Harmannus Huizenga |
+| 1.4 | Reflection on the serious games | Michiel Galama & Harmannus Huizenga |
+| 1.5 | Your 80,000 hours | Michiel Galama & Harmannus Huizenga |
+| 2.1 | The applied research project | Jacqueline Rietveld & Folkert de Jong |
+| 2.2 | Reflection on the project | Jacqueline Rietveld & Folkert de Jong |
+| 2.3 | The group account of the research | Jacqueline Rietveld & Folkert de Jong |
+| 3.1 | Film night | Michiel Galama & Harmannus Huizenga |
+| 3.2 | The crossing, or Alternative organisation | Michiel Galama & Harmannus Huizenga |
+| 3.3 | The exhibition in the church (not in the portfolio) | Christine Fenech |
+| 4 | Reflections on the learning outcomes | Michiel Galama & Harmannus Huizenga |
+| Choice | Four choice assignments | Michiel Galama & Harmannus Huizenga |
 
 Hand-in Sunday 1 November 2026. Exhibition Monday 2 and Tuesday 3 November 2026.
 
