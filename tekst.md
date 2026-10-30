@@ -219,7 +219,7 @@ I reflect on two serious games. Game 1 is the International Trade Game; I chose 
 
 ### 1.5 Your 80,000 hours
 
-About 80,000 working hours lie ahead of me. Three paths are realistically open: a master in sustainable entrepreneurship, a job in HR, or my own company that implements AI systems for other businesses. Below I look mostly at the third path, my own AI company. It is one direction I might go in, but nothing is fixed yet. Below I read that working life along the compass, in about 800 words.
+About 80,000 working hours lie ahead of me. Three paths are realistically open: a master in sustainable entrepreneurship, a job in HR, or my own company that implements AI systems for other businesses. In this piece I look mostly at the third path, my own AI company. It is one direction I might go in, but nothing is fixed yet. Below I read that working life along the compass, in about 800 words.
 
 **East, the situation.** I am a second-year HRM student and recently finished my HR internship at Home Center Wolvega. After my studies, I can do a master in sustainable entrepreneurship, take a job in HR, or start my own company that implements AI systems for other businesses. The third pulls at me most. At my internship I built an HR chatbot that answers simple questions from employees. It took no one's job. It lowered the pressure on HR, and my colleague used the time for more important things, including onboarding. At home I built a trading bot. I can build these systems. The master serves mainly my own interest. In HR, employees gain when I help them grow. In an AI company, my clients and I gain, but their employees could lose work. I value helping people grow, working with AI and seeing a business grow.
 
@@ -260,6 +260,14 @@ This chapter is about working together in our research project, The Table Betwee
 
 **Evidence.** Our team's research framework, The Table Between Us (see 2.1). My part was the literature research and the parts that were still missing.
 
+### 2.3 The group account of the research
+
+**Figure 4** *Our group poster, Meaningful Encounters*
+
+&#91;image: Our group poster, Meaningful Encounters\]
+
+Note. Poster made by our project group.
+
 ### How I have shown LO2
 
 In the research project I was a team member, not a leader. I did the literature research and wrote the parts that were still missing, and in week 1 I helped my working group go step by step (2.2). I also learned that I wait too long to ask when I do not understand what the team is doing. Next time I will take more of the lead.
@@ -284,7 +292,7 @@ These pieces look outward. At the film night, I watched The Big Short with three
 
 **The evening.** We watched the film at Sander's place. Not much needed to be organised. Sander lives almost next to the supermarket, so he bought the drinks and we split the costs. My part was choosing the film. I suggested The Big Short, and everyone was happy to go along with it.
 
-**Figure 4** *Our film night group at Sander's place*
+**Figure 5** *Our film night group at Sander's place*
 
 &#91;image: Our film night group\]
 
@@ -294,7 +302,7 @@ Note. Own photo. Everyone agreed that evening that we could all use this photo.
 
 **What it was for.** For me, the evening showed that Burry's way of leading is no longer the way of now, even though it ended well for him. He was right about the housing market, but I did not see him explain to his investors and colleagues why he did what he did. I think a leader must be able to explain his choices. My old coach Daniel also decided for his players, but he did explain his reasons afterwards (see Story 3). With the new boy in my football team, I asked first and then explained why I put him in midfield (see 1.3). So I see three steps. Burry decides. Daniel decides and explains. I want to ask, decide and explain. That is my North, looking through someone else's kaleidoscope before I lead.
 
-**Evidence.** Group reflection Film Night, The Big Short (Appendix C). Photo of the film night at Sander's place (Figure 4).
+**Evidence.** Group reflection Film Night, The Big Short (Appendix C). Photo of the film night at Sander's place (Figure 5).
 
 ### 3.2 The crossing, or Alternative organisation
 
@@ -372,7 +380,7 @@ What this tells me: he confirms the unintended consequence I expected, that expe
 
 ### How I have shown LO3
 
-At the film night I met three people I did not know, kept my own view of Michael Burry, and we still got along (3.1, Figure 4). In the Alternative organisation I looked at my own workplace from the outside. I found a habit that had outlived its purpose, made a plan to redesign it, and discussed that plan with the store manager (3.2, Appendix E). Both pieces showed me that a leader works with others and for others, which is the line of my chapter 4.
+At the film night I met three people I did not know, kept my own view of Michael Burry, and we still got along (3.1, Figure 5). In the Alternative organisation I looked at my own workplace from the outside. I found a habit that had outlived its purpose, made a plan to redesign it, and discussed that plan with the store manager (3.2, Appendix E). Both pieces showed me that a leader works with others and for others, which is the line of my chapter 4.
 
 ## Chapter 4 · One story
 
@@ -388,7 +396,7 @@ That is the line through my three learning outcomes. I still like structure and 
 | --- | --- | --- |
 | LO1 · Personal Leadership Foundation, inward | I found out what kind of leader I want to be: one who asks first and makes sure people can do it themselves. | Story 4 and the boy at the ski lift (1.1), my kaleidoscope (Figure 3), my pitch (1.2), my 80,000 hours (1.5) |
 | LO2 · Collaborative Impact through Applied Research, together | In the research project I did not take the lead. Two others were very enthusiastic about the question and took the lead themselves, and I was fine with that. I did the tasks that were mine: I researched the literature and wrote the parts that were still missing. In week 1, I did help my working group go step by step, so the students who first wanted to understand the problem could contribute. Next time I would take more of the lead, because I was often in the dark about what was going on. | 1.3 and 2.2 |
-| LO3 · Collective Impact & Social Accountability, outward | At the film night I talked with three people I did not know, kept my own view and we still got along. At the Plus, I made a plan for one shared way of filling shelves and discussed it with the store manager. | 3.1 and Figure 4, 3.2 and Appendix E |
+| LO3 · Collective Impact & Social Accountability, outward | At the film night I talked with three people I did not know, kept my own view and we still got along. At the Plus, I made a plan for one shared way of filling shelves and discussed it with the store manager. | 3.1 and Figure 5, 3.2 and Appendix E |
 
 ### Choice assignments (four)
 
@@ -428,7 +436,7 @@ Am I afraid for my own character when nobody can see me? My first answer was no,
 
 **North, what I take from it.** Planning the shots together worked very well. Job and Remon came up with shots I would not have thought of, and I came up with shots they would not have thought of. That is what I take with me as a leader. I can still do the parts I am good at, but the plan gets better when we make it together, because other people see things that I do not see.
 
-**Evidence.** \[Add the link to the video.\]
+**Evidence.** [The video about the minor on YouTube](https://youtube.com/shorts/dPnERYt0c30)
 
 #### Choice assignment 4 · De Mentale Wasstraat
 

@@ -69,11 +69,13 @@ const SETTINGS = {
   ],
 
   // Photos: the text after "image:" in tekst.md, the file in fotos/ and a short alt text.
+  // large: true shows the photo across the full width, for a poster with text to read.
   photos: [
     { match: 'The village festival in Warns', file: 'fotos/figure-1-village-festival.jpg', alt: 'Crowds at the village festival in Warns' },
     { match: 'Skiing in Austria', file: 'fotos/figure-2-austria.jpg', alt: 'Skiers on a snowy mountain slope in Austria' },
     { match: 'My North artefact, the kaleidoscope with the card next to it', file: 'fotos/figure-3-kaleidoscope-card.jpg', alt: 'The kaleidoscope with the handwritten card next to it' },
-    { match: 'Our film night group', file: 'fotos/figure-4-film-night.jpg', alt: "The film night group together at Sander's place" },
+    { match: 'Our group poster, Meaningful Encounters', file: 'fotos/figure-4-group-poster.jpg', alt: 'Our group poster Meaningful Encounters, about offering tea in the Prinsentuin and carrot cake and tea at NHL Stenden', large: true },
+    { match: 'Our film night group', file: 'fotos/figure-5-film-night.jpg', alt: "The film night group together at Sander's place" },
     { match: 'My notes with the original learning question', file: 'fotos/appendix-a-learning-question.jpg', alt: 'Screenshot of my notes with the original learning question' },
     { match: 'Change Journey assignment card', file: 'fotos/figure-d1-assignment-card.jpg', alt: 'Photo of the Change Journey assignment card' },
     { match: 'The letter from Sod', file: 'fotos/figure-d2-letter-from-sod.jpg', alt: 'Photo of the letter from Sod, the toddler' },
@@ -449,7 +451,8 @@ function photo(file, alt, label) {
 function findPhoto(text) {
   const entry = SETTINGS.photos.find((p) => norm(p.match) === norm(text));
   if (!entry) { warn(`No photo set for "[image: ${plain(text)}]". Add it to SETTINGS.photos in build.js.`); return null; }
-  return photo(entry.file, entry.alt || plain(text), plain(text));
+  const p = photo(entry.file, entry.alt || plain(text), plain(text));
+  return p && entry.large ? { ...p, large: true } : p;
 }
 
 // ---------------------------------------------------------------------------
@@ -566,8 +569,10 @@ function figureHTML(f, ctx, noteHTML, c) {
   let media;
   if (f.photo) {
     const caption = f.label ? `${plain(f.label)} ${plain(f.title)}` : plain(f.photo.alt);
-    media = `<a class="fig-media" href="${escapeAttr(f.photo.file)}" data-lightbox data-caption="${escapeAttr(caption)}">`
-      + `<img src="${escapeAttr(f.photo.file)}" alt="${escapeAttr(f.photo.alt)}" width="${f.photo.w}" height="${f.photo.h}" loading="lazy" decoding="async"></a>`;
+    const img = `<img src="${escapeAttr(f.photo.file)}" alt="${escapeAttr(f.photo.alt)}" width="${f.photo.w}" height="${f.photo.h}" loading="lazy" decoding="async">`;
+    // A large photo is already shown at full width, so it does not open in the photo viewer.
+    media = f.photo.large ? img
+      : `<a class="fig-media" href="${escapeAttr(f.photo.file)}" data-lightbox data-caption="${escapeAttr(caption)}">${img}</a>`;
   } else {
     media = `<div class="todo"><p class="kicker">Photo to come</p><p>${inline(f.image || '', ctx)}</p></div>`;
   }
@@ -580,7 +585,7 @@ function renderFigures(group, ctx, c) {
   const ratio = (f) => (f.photo ? f.photo.w / f.photo.h : 1.4);
   if (items.length === 1) {
     const f = items[0];
-    const shape = !f.photo ? '' : ratio(f) < 0.95 ? 'fig--portrait' : f.photo.w >= 1400 ? 'wide' : '';
+    const shape = !f.photo ? '' : f.photo.large ? 'wide fig--large' : ratio(f) < 0.95 ? 'fig--portrait' : f.photo.w >= 1400 ? 'wide' : '';
     return figureHTML(f, ctx, noteHTML, cls(shape, c));
   }
   // Landscape photos get a row of their own, upright photos stand in pairs at the same height.

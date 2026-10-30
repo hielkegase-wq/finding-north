@@ -534,6 +534,7 @@ tbody th { font-weight: 600; color: var(--heading); }
 .fig-media { display: block; width: fit-content; max-width: 100%; cursor: zoom-in; }
 .fig img { display: block; width: auto; max-width: 100%; height: auto; max-height: 30rem; filter: var(--img-filter); }
 .fig--portrait img { max-height: 34rem; }
+.fig--large img { width: 100%; max-height: none; }
 .fig-note { margin-top: 0.75rem; font-size: 0.86rem; line-height: 1.55; color: var(--muted); }
 
 .fig-row { display: grid; grid-template-rows: auto auto; column-gap: 2rem; }

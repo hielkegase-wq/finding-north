@@ -34,7 +34,7 @@ Alle `.html`-bestanden worden gemaakt door `build.js`. Pas ze dus niet met de ha
 
 - **Een citaat met regels, zoals het gedicht van Erin Hanson.** Zet het citaat tussen aanhalingstekens aan het eind van de alinea, gevolgd door de bron, bijvoorbeeld `(Hanson, n.d.).` Een ` / ` tussen twee regels wordt op de site een nieuwe regel.
 - **Een foto vervangen.** Zet de nieuwe foto in `fotos/` met precies dezelfde bestandsnaam en bouw opnieuw.
-- **Een nieuwe foto.** Zet hem in `fotos/` en voeg in `build.js` bij `photos` een regel toe met de tekst na `image:` uit `tekst.md`, de bestandsnaam en een korte Engelse alt-tekst.
+- **Een nieuwe foto.** Zet hem in `fotos/` en voeg in `build.js` bij `photos` een regel toe met de tekst na `image:` uit `tekst.md`, de bestandsnaam en een korte Engelse alt-tekst. Is het een poster met tekst om te lezen, zet er dan `large: true` bij; dan komt hij over de volle breedte (zoals de groepsposter bij 2.3).
 - **2.1 en 2.3.** Zodra `tekst.md` een kop `### 2.1 ...` of `### 2.3 ...` heeft, komt die tekst op de plek van het vak "To come".
 - **Grote koppen en kompasrichtingen** staan in `build.js` bij `headings` en `chapterCompass`.
 - **Het kompas met de verhalen** bij 1.1.1 leest de richting van elk verhaal uit de regel "Compass position" in de tabel van dat verhaal. De betekenis per richting komt uit de tabel in "How to read". De plek staat in `build.js` bij `storyCompass`.
