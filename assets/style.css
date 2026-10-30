@@ -94,12 +94,13 @@
 
 html {
   font-size: clamp(16px, calc(10px + 0.42vw), 18px);
-  scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
 }
+/* Smooth scrolling only after the page has opened, so a link to another page lands on its section at once. */
+html.is-ready { scroll-behavior: smooth; }
 
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
+  html.is-ready { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; }
 }
 
@@ -327,15 +328,16 @@ strong { font-weight: 600; color: var(--heading); }
 /* ---------- Parts, chapters and sections ---------- */
 
 .part, .chapter { padding-top: 9.5rem; }
+main > .part:first-child, main > .chapter:first-child { padding-top: calc(var(--nav-h) + 3.2rem); }
 .flow > .ch-rule { border-top: 2px solid var(--heading); }
 
 .part-head { padding-top: 2.4rem; }
-.part-head h2 { font-size: 3.4rem; line-height: 1.04; letter-spacing: -0.018em; }
+.part-title { font-size: 3.4rem; line-height: 1.04; letter-spacing: -0.018em; }
 
 .ch-compass { padding-top: 2.6rem; }
 .ch-compass .compass { width: 9.25rem; height: 9.25rem; }
 .ch-titles { padding-top: 2.75rem; }
-.ch-titles h2 {
+.ch-title {
   margin-top: 0.9rem;
   font-size: clamp(4.2rem, 5.4vw, 6rem);
   line-height: 0.98;
@@ -365,14 +367,14 @@ strong { font-weight: 600; color: var(--heading); }
 .sec-rule { border-top: 1px solid var(--line); }
 .flow > .sec-num { grid-column: side-start / side-end; margin-top: 0; padding-top: 1.62rem; font: 500 0.95rem/1.2 "IBM Plex Mono", monospace; letter-spacing: 0.04em; color: var(--accent); }
 .flow > .sec-head { grid-column: main-start / wide-end; margin-top: 0; padding-top: 1.4rem; }
-.sec-head h3 { margin-top: 0.1rem; font-size: 2.85rem; line-height: 1.08; letter-spacing: -0.014em; }
-.sec-head .kicker + h3 { margin-top: 0.6rem; }
+.sec-title { margin-top: 0.1rem; font-size: 2.85rem; line-height: 1.08; letter-spacing: -0.014em; }
+.sec-head .kicker + .sec-title { margin-top: 0.6rem; }
 .sec-head + * { margin-top: 1.9rem; }
 
 .sub { padding-top: 4.4rem; }
 .flow > .sub-head { grid-column: main-start / wide-end; margin-top: 0; }
-.sub-head h4 { font-size: 1.95rem; line-height: 1.15; letter-spacing: -0.01em; }
-.sub-head .kicker + h4 { margin-top: 0.5rem; }
+.sub-title { font-size: 1.95rem; line-height: 1.15; letter-spacing: -0.01em; }
+.sub-head .kicker + .sub-title { margin-top: 0.5rem; }
 
 /* ---------- Text blocks ---------- */
 
@@ -527,9 +529,28 @@ tbody th { font-weight: 600; color: var(--heading); }
 .ref { margin-top: 0.9rem; padding-left: 2.2rem; text-indent: -2.2rem; font-size: 0.97rem; line-height: 1.6; }
 .ref a { overflow-wrap: anywhere; }
 
+/* ---------- Previous / next page ---------- */
+
+.pager {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
+  width: var(--grid); margin: 8rem auto 0;
+}
+.pager a {
+  display: block;
+  padding: 1.35rem 1.6rem 1.5rem;
+  border: 1px solid var(--line);
+  color: inherit; text-decoration: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+.pager a:hover, .pager a:focus-visible { border-color: var(--accent); background: var(--panel); }
+.pager .kicker { color: var(--muted); }
+.pager a:hover .kicker { color: var(--accent); }
+.pager-title { display: block; margin-top: 0.4rem; font: 700 1.35rem/1.25 "Lora", Georgia, serif; color: var(--heading); }
+.pager-next { grid-column: 2; text-align: right; }
+
 /* ---------- Footer ---------- */
 
-.site-foot { margin-top: 9rem; }
+.site-foot { margin-top: 4.5rem; }
 .foot-inner {
   display: flex; align-items: baseline; gap: 2rem;
   width: var(--grid); margin: 0 auto; padding: 2rem 0 3rem;

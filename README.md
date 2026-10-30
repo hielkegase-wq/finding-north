@@ -21,10 +21,14 @@ Portfolio van Hielke Gase voor de minor Next Gen Leadership (HRM-3, NHL Stenden)
 | --- | --- |
 | `tekst.md` | Alle tekst van de site |
 | `fotos/` | De foto's |
-| `build.js` | Zet `tekst.md` om naar `index.html`. Bovenin staan de instellingen (`SETTINGS`) |
-| `index.html` | De site zelf. Wordt gemaakt door `build.js`, dus niet met de hand aanpassen |
+| `build.js` | Zet `tekst.md` om naar de pagina's. Bovenin staan de instellingen (`SETTINGS`) |
+| `index.html` | Startpagina: voorkant en How to read |
+| `chapter-1.html` t/m `chapter-4.html` | Eén pagina per hoofdstuk |
+| `references.html`, `appendices.html` | Bronnen en bijlagen |
 | `assets/style.css` | Opmaak, kleuren en het lichte en donkere thema |
 | `assets/site.js` | Themaschakelaar, navigatie en de fotoviewer |
+
+Alle `.html`-bestanden worden gemaakt door `build.js`. Pas ze dus niet met de hand aan, want bij de volgende keer bouwen worden ze overschreven.
 
 ## Veelvoorkomende aanpassingen
 
@@ -33,3 +37,4 @@ Portfolio van Hielke Gase voor de minor Next Gen Leadership (HRM-3, NHL Stenden)
 - **Een nieuwe foto.** Zet hem in `fotos/` en voeg in `build.js` bij `photos` een regel toe met de tekst na `image:` uit `tekst.md`, de bestandsnaam en een korte Engelse alt-tekst.
 - **2.1 en 2.3.** Zodra `tekst.md` een kop `### 2.1 ...` of `### 2.3 ...` heeft, komt die tekst op de plek van het vak "To come".
 - **Grote koppen en kompasrichtingen** staan in `build.js` bij `headings` en `chapterCompass`.
+- **Tekst weglaten** zonder hem uit `tekst.md` te halen: in `build.js` bij `omit`. Zo zijn 1.2.5 en alles behalve de eerste alinea van Appendix B weggelaten.

@@ -2,8 +2,11 @@
 /*
  * Finding North - build script
  *
- * Turns tekst.md into index.html. Run it with:   node build.js
+ * Turns tekst.md into the pages of the site. Run it with:   node build.js
  * Needs only Node.js, no packages.
+ *
+ * One page per chapter: index.html (cover and "How to read"), chapter-1.html
+ * to chapter-4.html, references.html and appendices.html.
  *
  * All text comes from tekst.md. The few things that are not in tekst.md
  * (display headings, compass directions, photos, "To come" boxes) are set
@@ -19,7 +22,7 @@ const ROOT = __dirname;
 
 const SETTINGS = {
   source: 'tekst.md',
-  output: 'index.html',
+  outDir: '.',
 
   cover: {
     title: 'Finding North.',
@@ -55,6 +58,7 @@ const SETTINGS = {
   omit: [
     { section: '1.2', startsWith: '**Reflection after the pitch.**' }, // 1.2.5 is not part of this portfolio
     { startsWith: '&#91;2.1 The applied research project' },           // shown as the 2.1 and 2.3 boxes
+    { section: 'Appendix B', startsWith: '**' },                       // Appendix B keeps only its first paragraph
   ],
 
   // Photos: the text after "image:" in tekst.md, the file in fotos/ and a short alt text.
@@ -234,16 +238,6 @@ function applySettings(doc) {
   }
 }
 
-function eachBlock(doc, fn) {
-  for (const p of doc.parts) {
-    p.blocks.forEach(fn);
-    for (const s of p.sections) {
-      s.blocks.forEach(fn);
-      for (const sub of s.subs) sub.blocks.forEach(fn);
-    }
-  }
-}
-
 // ---------------------------------------------------------------------------
 // 2. Inline text: bold, italic, links, placeholders, quotes and cross-references
 // ---------------------------------------------------------------------------
@@ -311,7 +305,7 @@ function inline(s, ctx) {
 
 function textHTML(s, ctx) {
   let html = escapeHTML(s).replace(new RegExp(STAR, 'g'), '*');
-  if (!ctx.noXref && !ctx.refs) html = crossRefs(html, ctx.ids);
+  if (!ctx.noXref && !ctx.refs) html = crossRefs(html, ctx);
   return html;
 }
 
@@ -320,9 +314,19 @@ function linkHTML(href, html) {
   return `<a href="${escapeAttr(href)}"${internal ? '' : ' target="_blank" rel="noopener"'}>${html}</a>`;
 }
 
-// Turns "Appendix B", "Figure 3", "Story 4" and "(see 1.3)" into links to that part of the page.
-function crossRefs(html, ids) {
-  const a = (id, text) => (ids.has(id) ? `<a class="xref" href="#${id}">${text}</a>` : text);
+// Link to something anywhere on the site: "#id" on the same page, "page.html#id" on another page.
+function hrefTo(id, ctx) {
+  const file = ctx.pageOf && ctx.pageOf.get(id);
+  if (!file) return null;
+  return file === ctx.file ? `#${id}` : `${file}#${id}`;
+}
+
+// Turns "Appendix B", "Figure 3", "Story 4" and "(see 1.3)" into links to that part of the site.
+function crossRefs(html, ctx) {
+  const a = (id, text) => {
+    const href = hrefTo(id, ctx);
+    return href ? `<a class="xref" href="${href}">${text}</a>` : text;
+  };
   return html
     .replace(/\bAppendix ([A-Z])\b/g, (m, x) => a(`appendix-${x.toLowerCase()}`, m))
     .replace(/\bFigure ([A-Z]?\d+)\b/g, (m, x) => a(`figure-${x.toLowerCase()}`, m))
@@ -612,8 +616,9 @@ function overviewLink(t, ctx) {
   const nox = { ...ctx, noXref: true };
   const m = t.match(/^(\d+(?:\.\d+)?)\b/);
   let id = m ? 's' + m[1].replace(/\./g, '-') : null;
-  if (!id || !ctx.ids.has(id)) id = ctx.titleIds.get(plain(t).toLowerCase()) || null;
-  return id && ctx.ids.has(id) ? `<a href="#${id}">${inline(t, nox)}</a>` : inline(t, nox);
+  if (!id || !ctx.pageOf.has(id)) id = ctx.titleIds.get(plain(t).toLowerCase()) || null;
+  const href = id ? hrefTo(id, ctx) : null;
+  return href ? `<a href="${href}">${inline(t, nox)}</a>` : inline(t, nox);
 }
 
 function storyMeta(tb, ctx, c) {
@@ -641,7 +646,7 @@ function renderList(b, ctx, c) {
 }
 
 // ---------------------------------------------------------------------------
-// 6. Sections, chapters, navigation and the page
+// 6. Sections, chapters and navigation (heading levels depend on the page)
 // ---------------------------------------------------------------------------
 
 function sectionKicker(s, part) {
@@ -651,7 +656,7 @@ function sectionKicker(s, part) {
   return null;
 }
 
-function renderSection(s, part, ctx) {
+function renderSection(s, part, ctx, level) {
   const head = { ...ctx, noXref: true };
   const kicker = sectionKicker(s, part);
   const num = s.kind === 'appendix' ? '' : s.num || '';
@@ -664,13 +669,13 @@ function renderSection(s, part, ctx) {
   const subs = s.subs.map((sub) => {
     const subKicker = sub.label ? `<p class="kicker">${inline(prep(sub.label), head)}</p>` : '';
     return `<section class="sub" id="${sub.id}" aria-labelledby="${sub.id}-h"><div class="flow">`
-      + `<header class="sub-head">${subKicker}<h4 id="${sub.id}-h">${inline(prep(sub.title), head)}</h4></header>`
+      + `<header class="sub-head">${subKicker}<h${level + 1} class="sub-title" id="${sub.id}-h">${inline(prep(sub.title), head)}</h${level + 1}></header>`
       + `${renderBlocks(sub.blocks, ctx)}</div></section>`;
   }).join('\n');
   return `<section class="${cls('sec', s.toCome !== undefined && 'sec--tocome')}" id="${s.id}" aria-labelledby="${s.id}-h"><div class="flow">`
     + '<div class="sec-rule" aria-hidden="true"></div>'
     + `<p class="sec-num">${escapeHTML(num)}</p>`
-    + `<header class="sec-head">${kicker ? `<p class="kicker">${inline(prep(kicker), head)}</p>` : ''}<h3 id="${s.id}-h">${inline(prep(s.display || s.title), head)}</h3></header>`
+    + `<header class="sec-head">${kicker ? `<p class="kicker">${inline(prep(kicker), head)}</p>` : ''}<h${level} class="sec-title" id="${s.id}-h">${inline(prep(s.display || s.title), head)}</h${level}></header>`
     + `${content}</div>${subs ? '\n' + subs : ''}</section>`;
 }
 
@@ -683,12 +688,12 @@ function chapterToc(part, ctx) {
   const nox = { ...ctx, noXref: true };
   const items = part.sections.map((s) => {
     const sub = s.display ? `<span class="toc-sub">${inline(prep(s.title), nox)}</span>` : '';
-    return `<li><a href="#${s.id}"><span class="toc-num">${escapeHTML(s.num || '')}</span><span class="toc-t">${tocTitle(s, ctx)}${sub}</span></a></li>`;
+    return `<li><a href="${hrefTo(s.id, ctx)}"><span class="toc-num">${escapeHTML(s.num || '')}</span><span class="toc-t">${tocTitle(s, ctx)}${sub}</span></a></li>`;
   }).join('');
   return `<div class="ch-toc wide"><p class="kicker">In this chapter</p><ol>${items}</ol></div>`;
 }
 
-function renderChapter(part, ctx) {
+function renderChapter(part, ctx, level) {
   const head = { ...ctx, noXref: true };
   const dir = SETTINGS.chapterCompass[part.n] || null;
   const blocks = part.blocks.slice();
@@ -697,19 +702,19 @@ function renderChapter(part, ctx) {
     deck = `<p class="deck">${inline(prep(blocks.shift().text), ctx)}</p>`;
   }
   const label = dir ? `Compass with ${DIR_NAMES[dir]} in orange` : 'Compass without a highlighted direction';
-  return `<section class="chapter" id="${part.id}" data-part aria-labelledby="${part.id}-h">`
+  return `<section class="chapter" id="${part.id}" aria-labelledby="${part.id}-h">`
     + '<header class="chapter-head"><div class="flow">'
     + '<div class="sec-rule ch-rule" aria-hidden="true"></div>'
     + `<div class="ch-compass side">${compassSVG(dir, 'lg', label)}</div>`
-    + `<div class="ch-titles wide"><p class="kicker">${escapeHTML(part.label)}</p><h2 id="${part.id}-h">${inline(prep(part.title), head)}</h2></div>`
+    + `<div class="ch-titles wide"><p class="kicker">${escapeHTML(part.label)}</p><h${level} class="ch-title" id="${part.id}-h">${inline(prep(part.title), head)}</h${level}></div>`
     + deck + renderBlocks(blocks, { ...ctx, lead: true }) + chapterToc(part, ctx)
     + '</div></header>\n'
-    + part.sections.map((s) => renderSection(s, part, ctx)).join('\n')
+    + part.sections.map((s) => renderSection(s, part, ctx, level + 1)).join('\n')
     + '</section>';
 }
 
-function renderPart(part, ctx) {
-  if (part.kind === 'chapter') return renderChapter(part, ctx);
+function renderPart(part, ctx, level) {
+  if (part.kind === 'chapter') return renderChapter(part, ctx, level);
   const head = { ...ctx, noXref: true };
   let content;
   if (part.kind === 'references') {
@@ -718,10 +723,10 @@ function renderPart(part, ctx) {
   } else {
     content = renderBlocks(part.blocks, { ...ctx, lead: true });
   }
-  return `<section class="${cls('part', `part--${part.kind}`)}" id="${part.id}" data-part aria-labelledby="${part.id}-h"><div class="flow">`
+  return `<section class="${cls('part', `part--${part.kind}`)}" id="${part.id}" aria-labelledby="${part.id}-h"><div class="flow">`
     + '<div class="sec-rule ch-rule" aria-hidden="true"></div>'
-    + `<header class="part-head wide"><h2 id="${part.id}-h">${inline(prep(part.title), head)}</h2></header>`
-    + `${content}</div>\n${part.sections.map((s) => renderSection(s, part, ctx)).join('\n')}</section>`;
+    + `<header class="part-head wide"><h${level} class="part-title" id="${part.id}-h">${inline(prep(part.title), head)}</h${level}></header>`
+    + `${content}</div>\n${part.sections.map((s) => renderSection(s, part, ctx, level + 1)).join('\n')}</section>`;
 }
 
 function renderNav(doc, ctx) {
@@ -734,19 +739,20 @@ function renderNav(doc, ctx) {
     if (p.sections.length) {
       const links = p.sections.map((s) => {
         const num = s.kind === 'appendix' ? s.num.replace(/^Appendix\s+/, '') : s.num || '';
-        let li = `<li><a href="#${s.id}"><span class="m-num">${escapeHTML(num)}</span><span class="m-t">${tocTitle(s, ctx)}</span></a></li>`;
+        let li = `<li><a href="${hrefTo(s.id, ctx)}"><span class="m-num">${escapeHTML(num)}</span><span class="m-t">${tocTitle(s, ctx)}</span></a></li>`;
         if (!s.num && s.subs.length) {
-          li += s.subs.map((sub) => `<li class="m-sub"><a href="#${sub.id}"><span class="m-num"></span><span class="m-t">${inline(prep(sub.title), nox)}</span></a></li>`).join('');
+          li += s.subs.map((sub) => `<li class="m-sub"><a href="${hrefTo(sub.id, ctx)}"><span class="m-num"></span><span class="m-t">${inline(prep(sub.title), nox)}</span></a></li>`).join('');
         }
         return li;
       }).join('');
       menu = `<div class="menu"><ul>${links}</ul></div>`;
     }
-    return `<li class="${cls('nav-item', menu && 'has-menu')}"><a class="nav-link" href="#${p.id}" data-target="${p.id}">${label}</a>${menu}</li>`;
+    const current = p.file === ctx.file;
+    return `<li class="${cls('nav-item', menu && 'has-menu')}"><a class="${cls('nav-link', current && 'is-current')}" href="${partHref(p)}"${current ? ' aria-current="page"' : ''}>${label}</a>${menu}</li>`;
   }).join('');
   return '<header class="site-head">' + triangleBand('tri-top')
     + '<nav class="nav" aria-label="Chapters">'
-    + `<a class="brand" href="#top">${titleHTML(SETTINGS.cover.title)}</a>`
+    + `<a class="brand" href="index.html">${titleHTML(SETTINGS.cover.title)}</a>`
     + `<ul class="nav-list">${items}</ul>`
     + `<button class="theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false">${ICON_MOON}${ICON_SUN}</button>`
     + '</nav></header>';
@@ -780,7 +786,7 @@ function renderCover(doc, ctx) {
   const img = pic
     ? `<img src="${escapeAttr(pic.file)}" alt="${escapeAttr(pic.alt)}" width="${pic.w}" height="${pic.h}" fetchpriority="high" decoding="async">`
     : `<div class="todo"><p class="kicker">Photo to come</p><p>${escapeHTML(c.photoAlt)}</p></div>`;
-  return '<section class="cover" id="top" aria-label="Cover"><div class="cover-inner">'
+  return '<section class="cover" aria-label="Cover"><div class="cover-inner">'
     + '<div class="cover-top"><div>'
     + `<h1 class="cover-title">${titleHTML(c.title)}</h1>`
     + (name ? `<p class="cover-name">${escapeHTML(name)}</p>` : '')
@@ -804,32 +810,89 @@ function favicon() {
   return 'data:image/svg+xml,' + encodeURIComponent(svg);
 }
 
-function renderPage(doc) {
-  const ids = new Set(usedIds);
-  eachBlock(doc, (b) => {
-    if (b.type !== 'p') return;
-    const f = figureLabelOf(prep(b.text));
-    if (f) ids.add(f.id);
-  });
+// ---------------------------------------------------------------------------
+// 7. Pages: the cover page, one page per chapter, references and appendices
+// ---------------------------------------------------------------------------
+
+const MARKER = 'Made by build.js from tekst.md';
+
+// Everything before the first chapter goes on index.html with the cover.
+function assignPages(doc) {
+  const pages = [{ file: 'index.html', parts: [] }];
+  let seenChapter = false;
+  for (const part of doc.parts) {
+    if (part.kind === 'chapter') seenChapter = true;
+    const file = !seenChapter ? 'index.html' : part.kind === 'chapter' ? `chapter-${part.n}.html` : `${part.id}.html`;
+    let page = pages.find((p) => p.file === file);
+    if (!page) { page = { file, parts: [] }; pages.push(page); }
+    page.parts.push(part);
+    part.file = file;
+  }
+  return pages;
+}
+
+function pageLabel(page) {
+  if (page.file === 'index.html') return SETTINGS.cover.title;
+  const part = page.parts[0];
+  return part.kind === 'chapter' ? `${part.label} · ${part.title}` : part.title;
+}
+
+function partHref(part) {
+  return part.file === 'index.html' ? `index.html#${part.id}` : part.file;
+}
+
+// Which page every section, subsection and figure is on, for links between pages.
+function siteContext(doc) {
+  const pageOf = new Map();
+  for (const part of doc.parts) {
+    const scan = (b) => {
+      const f = b.type === 'p' ? figureLabelOf(prep(b.text)) : null;
+      if (f) pageOf.set(f.id, part.file);
+    };
+    pageOf.set(part.id, part.file);
+    part.blocks.forEach(scan);
+    for (const s of part.sections) {
+      pageOf.set(s.id, part.file);
+      s.blocks.forEach(scan);
+      for (const sub of s.subs) { pageOf.set(sub.id, part.file); sub.blocks.forEach(scan); }
+    }
+  }
   const titleIds = new Map();
   for (const p of doc.parts) for (const s of p.sections) titleIds.set(plain(prep(s.title)).toLowerCase().replace(/\s*\(.*\)$/, ''), s.id);
   // "Choice" in the overview table points to the choice assignments
   const choice = doc.parts.flatMap((p) => p.sections).find((s) => /^choice assignments/i.test(s.title));
   if (choice) titleIds.set('choice', choice.id);
-  const ctx = { ids, titleIds };
+  return { pageOf, titleIds };
+}
 
+function pagerHTML(pages, i, ctx) {
+  const nox = { ...ctx, noXref: true };
+  const link = (page, dir) => `<a class="pager-${dir}" href="${page.file}"${dir === 'prev' ? ' rel="prev"' : ' rel="next"'}>`
+    + `<span class="kicker">${dir === 'prev' ? '&larr; Previous' : 'Next &rarr;'}</span>`
+    + `<span class="pager-title">${inline(prep(pageLabel(page)), nox)}</span></a>`;
+  const prev = pages[i - 1], next = pages[i + 1];
+  return `<nav class="pager" aria-label="Pages">${prev ? link(prev, 'prev') : '<span></span>'}${next ? link(next, 'next') : ''}</nav>`;
+}
+
+function renderPageFile(doc, pages, i, base) {
+  const page = pages[i];
+  const ctx = { ...base, file: page.file };
+  const home = page.file === 'index.html';
   const meta = readFront(doc.front);
   const name = meta.Student || '';
+  const site = plain(SETTINGS.cover.title).replace(/\.$/, '');
+  const title = home ? `${site}${name ? ` · ${name}` : ''}` : `${plain(prep(pageLabel(page)))} · ${site}`;
   const description = ['Finding North.', name && `Portfolio of ${name}`, meta.Programme, SETTINGS.cover.institution].filter(Boolean).join(' · ');
   const footMeta = [name, meta['Student number'], meta.Programme, SETTINGS.cover.institution].filter(Boolean).map(escapeHTML).join(' · ');
+  const content = (home ? renderCover(doc, ctx) + '\n' : '') + page.parts.map((p) => renderPart(p, ctx, home ? 2 : 1)).join('\n');
 
   return `<!doctype html>
-<!-- Made by build.js from tekst.md. Change tekst.md and run "node build.js" instead of editing this file. -->
+<!-- ${MARKER}. Change tekst.md and run "node build.js" instead of editing this file. -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${escapeHTML(plain(SETTINGS.cover.title).replace(/\.$/, ''))}${name ? ` · ${escapeHTML(name)}` : ''}</title>
+<title>${escapeHTML(title)}</title>
 <meta name="description" content="${escapeAttr(description)}">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="${favicon()}">
@@ -840,13 +903,13 @@ function renderPage(doc) {
 <script>try{var t=localStorage.getItem('finding-north-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <script src="assets/site.js?v=${fileHash('assets/site.js')}" defer></script>
 </head>
-<body>
+<body id="top">
 <a class="skip" href="#content">Skip to content</a>
 ${renderNav(doc, ctx)}
 <main id="content">
-${renderCover(doc, ctx)}
-${doc.parts.map((p) => renderPart(p, ctx)).join('\n')}
+${content}
 </main>
+${pagerHTML(pages, i, ctx)}
 <footer class="site-foot">${triangleBand('tri-foot')}<div class="foot-inner">
 <p class="foot-title">${titleHTML(SETTINGS.cover.title)}</p>
 <p class="foot-meta">${footMeta}</p>
@@ -859,13 +922,13 @@ ${doc.parts.map((p) => renderPart(p, ctx)).join('\n')}
 }
 
 // ---------------------------------------------------------------------------
-// 7. Run
+// 8. Run
 // ---------------------------------------------------------------------------
 
-// Usage: node build.js [source] [output]   (defaults: tekst.md and index.html)
+// Usage: node build.js [source] [folder]   (defaults: tekst.md and this folder)
 function main() {
   const source = process.argv[2] || SETTINGS.source;
-  const output = process.argv[3] || SETTINGS.output;
+  const outDir = path.resolve(ROOT, process.argv[3] || SETTINGS.outDir);
   const src = path.resolve(ROOT, source);
   if (!fs.existsSync(src)) {
     console.error(`Cannot find ${source} next to build.js.`);
@@ -873,12 +936,27 @@ function main() {
   }
   const doc = buildTree(readBlocks(fs.readFileSync(src, 'utf8')));
   applySettings(doc);
-  const html = renderPage(doc);
-  fs.writeFileSync(path.resolve(ROOT, output), html, 'utf8');
+  const pages = assignPages(doc);
+  const base = siteContext(doc);
+  fs.mkdirSync(outDir, { recursive: true });
 
-  const sections = doc.parts.reduce((n, p) => n + p.sections.length, 0);
-  const images = (html.match(/<img src=/g) || []).length;
-  console.log(`Built ${output}: ${doc.parts.length} parts, ${sections} sections, ${images} photos.`);
+  let photos = 0;
+  pages.forEach((page, i) => {
+    const html = renderPageFile(doc, pages, i, base);
+    photos += (html.match(/<img src=/g) || []).length;
+    fs.writeFileSync(path.join(outDir, page.file), html, 'utf8');
+  });
+  // Remove pages made by an earlier build that no longer exist.
+  for (const f of fs.readdirSync(outDir)) {
+    if (!f.endsWith('.html') || pages.some((p) => p.file === f)) continue;
+    const file = path.join(outDir, f);
+    if (fs.readFileSync(file, 'utf8').includes(MARKER)) {
+      fs.unlinkSync(file);
+      console.log(`Removed old page ${f}`);
+    }
+  }
+
+  console.log(`Built ${pages.length} pages (${photos} photos): ${pages.map((p) => p.file).join(', ')}`);
   for (const w of warnings) console.warn(`Warning: ${w}`);
 }
 
