@@ -245,6 +245,10 @@ At the start, my picture of a leader was someone like my coach Daniel: confident
 
 This chapter is about working together in our research project, The Table Between Us. 2.1 and 2.3 are group work. In 2.2 I reflect on my own part: I did the literature research and wrote the parts that were still missing, but I did not take the lead, and I waited too long to ask when I did not understand what the team was doing.
 
+### 2.1 The applied research project
+
+[Our team's research framework, The Table Between Us (Google Docs)](https://docs.google.com/document/d/1gweg3CGrVo-i1oETgos1c-2MT6G33tslOfIYLdw99m0/edit?tab=t.8b6f3q2dhjl9)
+
 ### 2.2 Reflection on the project
 
 **The method: how we worked.** Our project was The Table Between Us. Our client was Dr Hanneke Assen, professor in International Hospitality Education at the Hotel Management School Leeuwarden. Her question was how hospitality can create meaningful encounters between people who would otherwise not meet. Our team combined literature research with two encounters: offering tea in the Prinsentuin park on 23 September 2026, and offering cake and tea at school on 7 October 2026. Two members of our team were very enthusiastic about the research question and took the lead themselves. Everyone worked on their own part of the research. Before the holiday we mostly worked separately. After the holiday, everyone put their part together.
